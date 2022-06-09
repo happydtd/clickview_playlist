@@ -15,7 +15,7 @@ export const playListSlice = createSlice({
     initialState,
     reducers:{
         AddToPlayList: (state, action) =>{
-
+            state.Playlist = [...state.Playlist, action.payload];
         },
 
         RemoveFromPlayList: (state, action) =>{

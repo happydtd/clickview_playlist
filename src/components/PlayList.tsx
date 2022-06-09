@@ -4,9 +4,10 @@ import CommonLayout from './CommonLayout'
 //import playLists from '../data/playlists'
 import { PlayListType } from '../data/playlist.interface';
 import {useAppSelector} from '../Store/configureStore'
-
+import { useNavigate } from "react-router-dom";
 
 export default function PlayList() {
+  let navigate = useNavigate();
 
   const playList = useAppSelector(state  => state.playlist.Playlist); 
 
@@ -51,11 +52,15 @@ export default function PlayList() {
     },
   ];
 
+  const rowClickHandler =(record: PlayListType, rowIndex: number )=>{
+    navigate(`/PlayListDetail/${rowIndex}`);
+  }
+
   return (
     <CommonLayout>
       <Table columns={columns} dataSource={playList} onRow={(record, rowIndex) => {
         return {
-          onClick: event => {console.log(record)}, // click row
+          onClick: event => {rowClickHandler(record, rowIndex!)}, // click row
         };
       }}/>
     </CommonLayout>

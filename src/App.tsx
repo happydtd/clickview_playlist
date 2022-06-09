@@ -12,7 +12,7 @@ function App() {
         <Routes>
           <Route path='/' element={<PlayList/>}/>
           <Route path='/playlist' element={<PlayList/>}/>
-          <Route path='/playlist/:id' element={<PlayListDetail/>}/>
+          <Route path='/playlistdetail/:id' element={<PlayListDetail/>}/>
           <Route path='/video' element={<Video/>}/>
         </Routes>
     </div>

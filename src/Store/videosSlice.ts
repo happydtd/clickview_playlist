@@ -15,7 +15,7 @@ export const videosSlice = createSlice({
     initialState,
     reducers:{
         AddToVideos: (state, action) =>{
-
+            state.Videos = [...state.Videos, action.payload];
         },
 
         RemoveFromVideos: (state, action) =>{
