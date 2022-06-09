@@ -1,11 +1,13 @@
 import { Space, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/lib/table';
 import CommonLayout from './CommonLayout'
-import videos from '../data/videos'
+//import videos from '../data/videos'
 import { VideoType } from '../data/video.interface';
+import {useAppSelector} from '../Store/configureStore'
 
 
 export default function Video() {
+  const videos = useAppSelector(state  => state.videos.Videos); 
 
   const columns: ColumnsType<VideoType> = [
     {

@@ -3,6 +3,8 @@ import './App.css';
 import { Route, Routes } from 'react-router-dom';
 import PlayList from './components/PlayList';
 import Video from './components/Video';
+import PlayListDetail from './components/PlayListDetail';
+
 
 function App() {
   return (
@@ -10,6 +12,7 @@ function App() {
         <Routes>
           <Route path='/' element={<PlayList/>}/>
           <Route path='/playlist' element={<PlayList/>}/>
+          <Route path='/playlist/:id' element={<PlayListDetail/>}/>
           <Route path='/video' element={<Video/>}/>
         </Routes>
     </div>

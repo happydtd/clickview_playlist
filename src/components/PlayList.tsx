@@ -1,13 +1,14 @@
 import { Space, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/lib/table';
 import CommonLayout from './CommonLayout'
-import playLists from '../data/playlists'
+//import playLists from '../data/playlists'
 import { PlayListType } from '../data/playlist.interface';
+import {useAppSelector} from '../Store/configureStore'
 
 
 export default function PlayList() {
 
-
+  const playList = useAppSelector(state  => state.playlist.Playlist); 
 
   const columns: ColumnsType<PlayListType> = [
     {
@@ -52,7 +53,11 @@ export default function PlayList() {
 
   return (
     <CommonLayout>
-      <Table columns={columns} dataSource={playLists} />
+      <Table columns={columns} dataSource={playList} onRow={(record, rowIndex) => {
+        return {
+          onClick: event => {console.log(record)}, // click row
+        };
+      }}/>
     </CommonLayout>
     
   )
