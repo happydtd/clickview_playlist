@@ -1,4 +1,4 @@
-window.videos = [{
+export default window.videos = [{
 	"name": "Catalyst: Out of Africa",
 	"duration": 1628000,
 	"description": "Prof Vanessa Hayes is searching for the origins of modern society, revealing the bedrock of human genetic diversity. Her work exposes some startling truths about racial inequality in modern medicine.",
