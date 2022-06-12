@@ -1,11 +1,11 @@
 import {configureStore} from '@reduxjs/toolkit'
-import { playListSlice } from './playlistSlice'
+import { playListsSlice } from './playlistsSlice'
 import { videosSlice } from './videosSlice'
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 
 export const store = configureStore({
     reducer: {
-        playlist: playListSlice.reducer,
+        playlists: playListsSlice.reducer,
         videos: videosSlice.reducer
     },
 })

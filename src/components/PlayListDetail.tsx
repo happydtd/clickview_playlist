@@ -9,23 +9,24 @@ import VideoCard from './VideoCard';
 
 export default function PlayListDetail() {
   const [ page, setPage ] = useState(1);
-  let play : PlayListType | null = null;
+  let play : PlayListType | undefined ;
   let { id } = useParams(); 
   console.log(id);
-  const playList = useAppSelector(state  => state.playlist.Playlist); 
+  const playLists = useAppSelector(state  => state.playlists.Playlists); 
   if (id){
-    play = playList[parseInt(id)];
+    play = playLists.find(i=>i.id === parseInt(id!));
   }
-    
+  
+  if (!play) return (<>Can not find play details</>)
   return (
     play &&
     <CommonLayout>
        <InfiniteScroll
-          dataLength={play.videoIds.length} //This is important field to render the next data
+          dataLength={play.videoIds!.length} //This is important field to render the next data
           next={()=> {
             setPage(page=>page+1)
           }}
-          hasMore={true}
+          hasMore={false}
           loader={<h4>Loading...</h4>}
           endMessage={
             <p style={{ textAlign: 'center' }}>
