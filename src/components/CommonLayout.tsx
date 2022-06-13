@@ -1,7 +1,8 @@
-import { Layout, Menu} from 'antd';
+import { Layout, Menu, Typography} from 'antd';
 import { UserOutlined} from '@ant-design/icons';
 import { Link } from "react-router-dom";
 import 'antd/dist/antd.min.css';
+import './CommonLayout.css'
 
 const { Header, Content, Sider } = Layout;
 
@@ -34,8 +35,7 @@ export default function CommonLayout({children}:ParentCompProps) {
       {
         <Layout>
         <Header className="header" >
-          <div className="logo" />
-            <a style={{color: '#FFFFFF'}}>ClickView</a>
+          <Typography style={{color:'white'}}>ClickView</Typography>
         </Header>
         <Layout>
           <Sider width={200} className="site-layout-background">

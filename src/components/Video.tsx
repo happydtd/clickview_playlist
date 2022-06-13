@@ -1,12 +1,21 @@
-import { Space, Table, Image, Popconfirm } from 'antd';
+import { Table, Image, Col, Button, Modal, message } from 'antd';
 import type { ColumnsType } from 'antd/lib/table';
 import CommonLayout from './CommonLayout'
-//import videos from '../data/videos'
+import { PlusOutlined } from '@ant-design/icons';
 import { VideoType } from '../data/video.interface';
-import {useAppSelector} from '../Store/configureStore'
+import {useAppDispatch, useAppSelector} from '../Store/configureStore'
+import { useState } from 'react';
+import SelectPlayList from './SelectPlayList';
+import { AddVideosToPlayList } from '../Store/playlistsSlice';
 
 
 export default function Video() {
+  const dispatch = useAppDispatch();
+  const [ visible, setVisible] = useState(false);
+  const [ confirmLoading, setConfirmLoading] = useState(false);
+  const [ modalTitle, setmodalTitle] = useState("");
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+
   const videos = useAppSelector(state  => state.videos.Videos); 
 
   const columns: ColumnsType<VideoType> = [
@@ -23,22 +32,10 @@ export default function Video() {
       width: '10%',
     },
     {
-      title: 'Duration',
-      dataIndex: 'duration',
-      key: 'duration',
-      width: '10%',
-    },
-    {
       title: 'Description',
       dataIndex: 'description',
       key: 'description',
-      width: '40%',
-    },
-    {
-      title: 'DateCreated',
-      dataIndex: 'dateCreated',
-      key: 'dateCreated',
-      width: '10%',
+      width: '50%',
     },
     {
       title: 'Thumbnail',
@@ -48,46 +45,86 @@ export default function Video() {
       render: thumbnail=> {return <Image width='100%' src={thumbnail}/>}
     },
     {
-      title: 'Action',
-      key: 'action',
-      render: (_, record) => (
-        <Space size="middle">
-          <a onClick={()=>handleEdit(record)}>Edit</a>
-          <Popconfirm
-                title="Are you sure to delete?"
-                okText="Confirm"
-                cancelText="Cancel"
-                onConfirm={()=>handleDelete(record.id)}
-          >
-            <a>Delete</a>
-          </Popconfirm>
-        </Space>
-      ),
+      title: 'Duration',
+      dataIndex: 'duration',
+      key: 'duration',
+      width: '10%',
+    },
+    {
+      title: 'DateCreated',
+      dataIndex: 'dateCreated',
+      key: 'dateCreated',
+      width: '10%',
     },
   ];
 
-  const handleAdd = ()=>{
-    // setmodalTitle(`Add new playlist`);
-    // setActionType("Add");
-    // setVisible(true);
+  const onSelectChange = (newSelectedRowKeys:any) => {
+    setSelectedRowKeys(newSelectedRowKeys);
+  };
+
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+  };
+
+  const hasSelected = selectedRowKeys.length > 0;
+
+  
+  const handleAddSelectedVideoToPlayList = (record:any)=>{
+    setmodalTitle(`Select a playlist`);
+    setVisible(true);
   }
 
-  const handleEdit =(record:any)=>{
-    // setplayList(record);
-    // setmodalTitle(`Edit playlist`);
-    // setActionType("Edit");
-    // setVisible(true);
-  }
+  const handleModalCancel = () => {
+    setVisible(false);
+  };
 
-  const handleDelete =(id: number)=>{
-    // dispatch(RemoveFromPlayLists(id))
+  const handleModalOK = async (values:any) => {
+    setConfirmLoading(true);
+    const { playListId } = values;
+    
+    try{
+      dispatch(AddVideosToPlayList({playListId, selectedRowKeys}));
+      message.success('Success');
+    }
+    catch(error){
+      message.success('Error');
+    }
+
+    setSelectedRowKeys([]);
+    setVisible(false);
+    setConfirmLoading(false);
   }
 
   return (
     <CommonLayout>
-      <Table columns={columns} dataSource={videos} rowKey={record=>record.id}/>
+      <div style={{ marginBottom: 16 }}>
+        <Col span={2} >
+          <Button type="primary" icon={<PlusOutlined/>} onClick={handleAddSelectedVideoToPlayList} disabled={!hasSelected}>
+            Add selected videos to playlist
+          </Button>
+        </Col>
+        <Col span={22}></Col>
+      </div>
+      <Table 
+        rowSelection={rowSelection}
+        columns={columns} 
+        dataSource={videos} 
+        rowKey={record=>record.id}/>
+      <Modal
+            title={modalTitle}
+            visible={visible}
+            footer={null}
+            closable={false}
+            confirmLoading={confirmLoading}
+            onCancel={handleModalCancel}
+          >
+            <SelectPlayList handleModalOK={handleModalOK} handleModalCancel={handleModalCancel}></SelectPlayList>
+      </Modal>
     </CommonLayout>
     
+
+
   )
 }
 

@@ -39,7 +39,6 @@ export default function AddOreditPlayList({handleModalOK, handleModalCancel,acti
 
   const onFinish = (values: any) => {
     handleModalOK(values);
-    form.resetFields();
   };
 
   const onCancel = () => {
@@ -57,14 +56,13 @@ export default function AddOreditPlayList({handleModalOK, handleModalCancel,acti
         });
   }
   else{
-    playList={ 
-      id: +generateId(),
-      name: undefined,
-      description:undefined,
-      videoIds:undefined,
+    form.setFieldsValue({
+      id:+generateId(),
+      name:undefined,
+      description: undefined,
+      videoIds: undefined,
       dateCreated: moment().format('YYYY-MM-DDTHH:mm:ss'),
-    }
-
+    });
   }
 
   return (
@@ -74,7 +72,7 @@ export default function AddOreditPlayList({handleModalOK, handleModalCancel,acti
       form={form} 
       name="control-hooks" 
       onFinish={onFinish} 
-      initialValues={playList}
+
       >
       <Form.Item name="id" label="Id" rules={[{ required: true }]}>
         <Input disabled/>
@@ -102,7 +100,7 @@ export default function AddOreditPlayList({handleModalOK, handleModalCancel,acti
         <Input disabled/>
       </Form.Item>
       <Form.Item {...tailLayout}>
-          <Button type="primary" htmlType="submit">
+          <Button type="primary" htmlType="submit" style={{marginRight: '8px'}}>
             {actionType==='Add'? 'Add' : 'Update'}
           </Button>
           <Button htmlType="button" onClick={onCancel}>

@@ -1,4 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit'
+import { stat } from 'fs'
 import {VideoType} from '../data/video.interface'
 import videos from '../data/videos'
 
@@ -15,11 +16,11 @@ export const videosSlice = createSlice({
     initialState,
     reducers:{
         AddToVideos: (state, action) =>{
-            state.Videos = [...state.Videos, action.payload];
+            return state;
         },
 
         RemoveFromVideos: (state, action) =>{
-
+            return state;
         }
     }
 })

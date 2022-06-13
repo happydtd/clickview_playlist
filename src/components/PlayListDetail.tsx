@@ -11,7 +11,6 @@ export default function PlayListDetail() {
   const [ page, setPage ] = useState(1);
   let play : PlayListType | undefined ;
   let { id } = useParams(); 
-  console.log(id);
   const playLists = useAppSelector(state  => state.playlists.Playlists); 
   if (id){
     play = playLists.find(i=>i.id === parseInt(id!));

@@ -1,7 +1,6 @@
-import { Button, Col, Modal, Popconfirm, Row, Space, Table} from 'antd';
+import { Button, message, Modal, Popconfirm, Space, Table} from 'antd';
 import type { ColumnsType } from 'antd/lib/table';
 import CommonLayout from './CommonLayout'
-//import playLists from '../data/playlists'
 import { PlayListType } from '../data/playlist.interface';
 import {useAppSelector, useAppDispatch} from '../Store/configureStore'
 import {AddToPlayLists, RemoveFromPlayLists, UpdatePlayLists} from '../Store/playlistsSlice'
@@ -18,7 +17,6 @@ export default function PlayList() {
   const [ actionType, setActionType] = useState<"Edit"|"Add">("Add");
   const [ modalTitle, setmodalTitle] = useState("");
   const [ playList, setplayList] = useState<PlayListType|null>(null);
-
   const columns: ColumnsType<PlayListType> = [
     {
       title: 'Id',
@@ -57,14 +55,14 @@ export default function PlayList() {
       key: 'action',
       render: (_, record) => (
         <Space size="middle">
-          <a onClick={()=>handleEdit(record)}>Edit</a>
+          <Button type="link" onClick={()=>handleEdit(record)}>Edit</Button>
           <Popconfirm
                 title="Are you sure to delete?"
                 okText="Confirm"
                 cancelText="Cancel"
                 onConfirm={()=>handleDelete(record.id)}
           >
-            <a>Delete</a>
+            <Button type="link">Delete</Button>
           </Popconfirm>
         </Space>
       ),
@@ -85,10 +83,17 @@ export default function PlayList() {
   }
 
   const handleDelete =(id: number)=>{
-    dispatch(RemoveFromPlayLists(id))
+    try{
+      dispatch(RemoveFromPlayLists(id))
+      message.success('Success');
+    }
+    catch(error){
+      message.success('Error');
+    }
   }
 
   const handleModalCancel = () => {
+    setplayList(null);
     setVisible(false);
   };
 
@@ -96,39 +101,41 @@ export default function PlayList() {
     setConfirmLoading(true);
     const { id, name, description, videoIds, dateCreated } = values;
     
-    if(actionType === 'Add' )
-    {
-      dispatch(AddToPlayLists({id, name, description, videoIds, dateCreated}));
+    try{
+      if(actionType === 'Add' )
+      {
+        dispatch(AddToPlayLists({id, name, description, videoIds, dateCreated}));
+        message.success('Success');
+      }
+      else
+      {
+        dispatch(UpdatePlayLists({id, name, description, videoIds, dateCreated}));
+        message.success('Success');
+      }
     }
-    else
-    {
-      dispatch(UpdatePlayLists({id, name, description, videoIds, dateCreated}));
+    catch(error){
+      message.success('Error');
     }
+    setplayList(null);
     setVisible(false);
     setConfirmLoading(false);
   }
 
   return (
     <CommonLayout>
-      <Row>
-        <Col span={2} >
+      <div style={{ marginBottom: 16 }}>
           <Button type="primary" icon={<PlusOutlined/>} onClick={handleAdd}>
             Add
-            </Button>
-        </Col>
-        <Col span={22}></Col>
-      </Row>
-      <Row>
-        <Col span={24}>
-          <Table columns={columns} dataSource={playLists} rowKey={record=>record.id} />
-        </Col>
-      </Row>
+          </Button>
+      </div>
+      <Table columns={columns} dataSource={playLists} rowKey={record=>record.id} />
       <Modal
             title={modalTitle}
             visible={visible}
             footer={null}
+            closable={false}
             confirmLoading={confirmLoading}
-            // onCancel={()=>setVisible(false)}
+            onCancel={handleModalCancel}
           >
             <AddOreditPlayList handleModalOK={handleModalOK} handleModalCancel={handleModalCancel} actionType={actionType} playList ={playList} ></AddOreditPlayList>
       </Modal>
